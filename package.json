@@ -1,0 +1,19 @@
+{
+  "name": "ba-server",
+  "version": "1.0.0",
+  "description": "'serve games and users for Bad Apples'",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lemazza/BA-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lemazza/BA-server/issues"
+  },
+  "homepage": "https://github.com/lemazza/BA-server#readme"
+}
