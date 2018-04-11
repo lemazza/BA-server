@@ -42,18 +42,22 @@ userSchema.statics.hashPassword = function(password) {
 
 const gameSchema = mongoose.Schema({
   players: [{
+    creator: {type: Boolean, default: false},
+    controller: {type: String, default: 'none'},
     name: String,
     hand: {type: Array, default: ['goodCard', 'goodCard', 'goodCard', 'badCard']},
     stack: [String],
     roundsWon: {type:Number, default: 0},
     bid: {type:Number, default: 0},
+    tablePosition: Number,
     active: Boolean,
     passed: Boolean,
+    loggedIn: Boolean,
   }],
   numHumans: {type: Number, default: 1, min:1, max: 6},
   numBots: {type: Number, default: 0, min:0, max:5},
   round: {type: Number, default: 0},
-  phase: {type: String, default: 'waiting to start'},
+  phase: {type: String, default: 'waiting for players'},
   turn: {type: Number, default: 0},
   highBid: {type: Number, default: 0},
   startPlayer: {type: Number, default:0},
@@ -73,10 +77,12 @@ gameSchema.methods.serialize = function() {
       bid: player.bid,
       active: player.active,
       passed: player.passed,
+      loggedIn: player.loggedIn,
+      tablePosition: player.tablePosition,
     }
   })
   return {
-    id: this._id,
+    gameId: this._id,
     players: playersDisplay,
     numBots: this.numBots,
     numHumans: this.numHumans,
@@ -86,6 +92,7 @@ gameSchema.methods.serialize = function() {
     highBid: this.highBid,
     startPlayer: this.startPlayer,
     chat: this.chat,
+    creator: this.creator,
   }
 }
 

@@ -70,7 +70,7 @@ app.post('/users', function(req, res, next) {
     })
     .then(user => {
       let output = user.serialize();
-      output.authToken = createAuthToken(req.body);
+      output.authToken = createAuthToken(req.body);//change req.body to user??
       return res.status(201).json(output);
     })
     .catch(err => {
