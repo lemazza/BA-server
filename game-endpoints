@@ -1,0 +1,26 @@
+app.post(/user)
+
+app.get(/user)
+
+app.post(/auth)
+
+app.get(/auth)
+
+app.post(/game)
+
+app.get(/games/:gameId)
+
+
+app.get(/games/:gameId/startGame)
+
+app.get(/games/:gameId, jwtAuth)
+
+app.get(/games/:gameId/pass)
+
+app.get(/games/:gameId/bid/:bidAmount)
+
+app.get(/games/:gameId/playCard)
+
+app.get(/games/:gameId/selectCard)
+
+app.post(/games/:gameId/chat)
