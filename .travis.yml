@@ -1,0 +1,12 @@
+language: node_js
+node_js: node
+deploy:
+  provider: heroku
+  api_key:
+    secure: 03cbe518-ba51-483d-8323-46cedf36c25a
+  app: rocky-castle-95601
+  on:
+    repo: lemazza/BA-server
+    branch: master
+services:
+- mongodb
