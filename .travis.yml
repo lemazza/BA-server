@@ -4,7 +4,7 @@ deploy:
   provider: heroku
   api_key:
     secure: 03cbe518-ba51-483d-8323-46cedf36c25a
-  app: rocky-castle-95601
+  app: bad-apples-api-server
   on:
     repo: lemazza/BA-server
     branch: master
