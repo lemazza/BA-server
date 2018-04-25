@@ -47,13 +47,13 @@ const gameSchema = mongoose.Schema({
     name: String,
     hand: {type: Array, default: ['goodCard', 'goodCard', 'goodCard', 'badCard']},
     stack: [String],
+    revealed: [String],
     roundsWon: {type:Number, default: 0},
     bid: {type:Number, default: 0},
-    tablePosition: Number,
-    active: Boolean,
-    passed: Boolean,
+    passed: {type: Boolean, default: false},
     loggedIn: Boolean,
   }],
+  playerOrder: [Number],
   numHumans: {type: Number, default: 1, min:1, max: 6},
   numBots: {type: Number, default: 0, min:0, max:5},
   round: {type: Number, default: 0},
@@ -68,22 +68,26 @@ const gameSchema = mongoose.Schema({
 });
 
 gameSchema.methods.serialize = function() {
-  let playersDisplay = this.players.map(player=>{
+  let playersDisplay = this.players.map((player, index)=>{
+    let active = (index === this.playerOrder[this.turn])? true : false;
     return {
+      active,
+      creator: player.creator,
       name: player.name,
+      controller: player.controller,
       hand: player.hand.length,
       stack: player.stack.length,
+      revealed: player.revealed,
       roundsWon: player.roundsWon,
       bid: player.bid,
-      active: player.active,
       passed: player.passed,
       loggedIn: player.loggedIn,
-      tablePosition: player.tablePosition,
     }
   })
   return {
     gameId: this._id,
     players: playersDisplay,
+    playerOrder: this.playerOrder,
     numBots: this.numBots,
     numHumans: this.numHumans,
     round: this.round,
@@ -92,7 +96,6 @@ gameSchema.methods.serialize = function() {
     highBid: this.highBid,
     startPlayer: this.startPlayer,
     chat: this.chat,
-    creator: this.creator,
   }
 }
 
