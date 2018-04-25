@@ -29,7 +29,6 @@ function tearDownDb() {
   TESTS
 =====================================================================*/
 
-
 describe('Bad Apples API resources', function() {
   before(function(){
     return runServer(TEST_DATABASE_URL, 8888);
@@ -50,7 +49,6 @@ describe('Bad Apples API resources', function() {
   describe('Create new Game', function() {
     it('should add game to db', function() {
       return expect(201).to.equal(201)
-      });
     });
-  });      
+  });
 });
