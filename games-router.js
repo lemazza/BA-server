@@ -461,6 +461,7 @@ router.get('/:gameId/reveal/:revealId', jwtAuth, (req, res, next) => {
             hand: shuffle(hand),
             stack: [],
             revealed: [],
+            passed: false,
             bid: 0,
           });
           return resetPlayer;
