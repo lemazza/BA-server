@@ -115,7 +115,7 @@ router.get('/:gameId/place/:cardType', jwtAuth, (req, res, next) => {
   const userId = req.user.id;
   const cardType = req.params.cardType;
 
-  // make sure the game exists
+  // make sure the game exists and its the right phase
   Game
   .findById(req.params.gameId)
   .then(game=> {
@@ -123,9 +123,14 @@ router.get('/:gameId/place/:cardType', jwtAuth, (req, res, next) => {
       res.status(400).json({error: 'not a valid gameId', location: 'place'});
     }
 
+    console.log('card placed, in game phase: ', game.phase);
+    if(!(game.phase === 'place first card' || game.phase === 'place or bid')) {
+      console.log("can't place a card right now");
+      return res.status(400).json({error: 'cannot place card in this phase', location: 'place'});
+    }
+
     const gameUpdates = {};
     let playerIndex;
-    console.log('made it to hear in PLACE', game.players);
 
     //make sure the player exists and it is their turn
     let activePlyr = game.playerOrder[game.turn];
@@ -234,12 +239,18 @@ router.get('/:gameId/bid/:bidAmount', jwtAuth, (req, res, next) => {
     gameUpdates.highBid = bidAmount;
 
     console.log('bidAmount and allStacksTotal', bidAmount, allStacksTotal);
-    if (bidAmount === allStacksTotal) {
+    if (Number(bidAmount) === Number(allStacksTotal)) {
+      console.log('BID AMOUNT EQUALS NUMBER OF CARDS ON THE TABLE');
       // change to reveal cards phase, all players pass except user
       gameUpdates.phase = 'reveal cards';
-      gameUpdates.players = newPlayers.map(plyr => plyr.passed = true);
-      gameUpdates.players[playerIndex].passed = false;
-      gameUpdates.playerOrder = game.playerOrder.filter(num => num !== playerIndex);
+      gameUpdates.players = newPlayers.map((plyr, index) => {
+        if (index === playerIndex) {
+          return Object.assign(plyr, {passed: false});
+        } else {
+          return Object.assign(plyr, {passed: true});
+        }
+      });
+      gameUpdates.playerOrder = game.playerOrder.filter(num => num === playerIndex);
     } else {
       gameUpdates.phase = 'bid or pass';
     }  
@@ -249,7 +260,7 @@ router.get('/:gameId/bid/:bidAmount', jwtAuth, (req, res, next) => {
     //update gamestate in db
     //send gamestate
     const nextTurn = (gameUpdates.phase === 'reveal cards')? 
-      game.turn : setNextPlayerTurn(game.playerOrder, game.turn);
+      0 : setNextPlayerTurn(game.playerOrder, game.turn);
 
     Game
     .findByIdAndUpdate(
@@ -431,7 +442,6 @@ router.get('/:gameId/reveal/:revealId', jwtAuth, (req, res, next) => {
       let discardIndex = Math.floor( Math.random() * allPlayerCards.length );
       allPlayerCards.splice(discardIndex, 1);
       player.hand = allPlayerCards;
-      console.log('new player hand, post discard', player.hand)
       player.stack = [];
       player.revealed = [];
       gameUpdates.players[playerIndex] = player;
@@ -511,6 +521,7 @@ router.get('/:gameId/reveal/:revealId', jwtAuth, (req, res, next) => {
             hand: shuffle(hand),
             stack: [],
             revealed: [],
+            passed: false,
             bid: 0,
           });
         });
