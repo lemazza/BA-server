@@ -60,8 +60,7 @@ gameSocket.on('connection', function(socket) {
   let {id: userId, username} = socket.decoded_token.user;
   console.log('new connection', socket.id,  socket.decoded_token.sub);
   
-  socket.on('join game', function(obj) {
-    let {gameId} = obj;
+  socket.on('join game', function(gameId) {
     console.log('gameId request is', gameId);
     socket.join(gameId);
     gameSocket.in(gameId).emit('get update');
