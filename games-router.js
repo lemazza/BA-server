@@ -8,6 +8,7 @@ const router = express.Router();
 const {jwtStrategy} = require('./auth/strategies');
 const {createHumanPlayer, setStartGameOrder, updateGameAndSendRes, setNextPlayerTurn, shuffle} = require('./utils');
 
+
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
 
@@ -34,10 +35,11 @@ router.post('/', jwtAuth, (req, res, next) => {
   });
 });
 
-
-
+function returnRouter(io) {
 router.get('/:gameId', jwtAuth, (req, res, next) => {
+  console.log('get req');
   const {id: userId, username} = req.user;
+
   Game
   .findById(req.params.gameId)
   .then(game=> {
@@ -570,6 +572,8 @@ router.post('/:gameId/chat', jwtAuth, (req, res, next) => {
 
 */
 });
+return router;
+}
 
 
-module.exports = {router};
+module.exports = {returnRouter};
