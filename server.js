@@ -25,10 +25,10 @@ const jwtAuth = passport.authenticate('jwt', { session: false });
 app.use(morgan('common'));
 app.use(bodyParser.json());
 
-
+//'http://localhost:3000'
 //  https://sleepy-bhaskara-1d8eae.netlify.com
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", 'http://localhost:3000');
+  res.header("Access-Control-Allow-Origin", 'https://bad-apples.netlify.com');
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Authorization, Content-Type, Accept");
   res.header("Access-Control-Allow-Credentials", true);
   next();
