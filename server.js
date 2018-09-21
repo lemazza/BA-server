@@ -36,7 +36,7 @@ app.use(function(req, res, next) {
 
 
 app.use('/api/auth', authRouter);
-//app.use('/games', returnRouter(io));
+app.use('/games', returnRouter);
 
 
 app.get('/', function (req, res, next) {
