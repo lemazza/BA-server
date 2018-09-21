@@ -69,7 +69,6 @@ function updateGameAndSendRes (res, gameId, userId, gameUpdates, endpoint) {
     {new: true}
   )
   .then(game => {
-    console.log('game in updateGameAndSendRes', game);
     if (!game) {
       return {
         resObj: {error: 'error updating game', location: endpoint},
